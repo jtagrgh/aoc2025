@@ -88,5 +88,39 @@ def part2():
     print(a[0] * b[0])
 
 
+def part2_union():
+    node_combinations = sorted([(a, b) for a,b in combinations(nodes, 2)], key=lambda x: dist(*x), reverse=True)
+    node_idx = {node:i for i,node in enumerate(nodes)}
+    parent = [i for i in range(len(node_idx))]
+    size = [1 for _ in parent]
+
+    def find(node):
+        if parent[node] == node:
+            return node
+        parent[node] = find(parent[node])
+        return parent[node]
+    
+    def union(x, y):
+        x,y = find(x), find(y)
+        if x == y:
+            return False
+        x,y = sorted([x,y], key=lambda a: size[a])
+        parent[x] = y
+        size[y] += size[x]
+        return True
+    
+    subgraph_count = len(nodes)
+
+    a = b = (0,0,0)
+
+    while subgraph_count > 1:
+        a,b = node_combinations.pop()
+        if union(node_idx[a],node_idx[b]):
+            subgraph_count -= 1
+
+    print(a[0] * b[0])
+
+
 part1()
-part2()
+# part2()
+part2_union()
