@@ -121,6 +121,26 @@ def part2_union():
     print(a[0] * b[0])
 
 
+def part2_sets():
+    circuits = {frozenset([node]) for node in nodes}
+    node_combinations = sorted([(a, b) for a,b in combinations(nodes, 2)], key=lambda x: dist(*x), reverse=True)
+
+    a = b = (0,0,0)
+
+    while len(circuits) > 1:
+        a,b = node_combinations.pop()
+        circ_a = next(circ for circ in circuits if a in circ)
+        circ_b = next(circ for circ in circuits if b in circ)
+
+        circuits.discard(circ_a)
+        circuits.discard(circ_b)
+
+        circuits.add(circ_a | circ_b)
+
+    print(a[0] * b[0])
+
+
 part1()
-# part2()
+part2()
 part2_union()
+part2_sets()
